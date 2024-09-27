@@ -1,17 +1,15 @@
 // src/components/Login.js
 import React, { useState } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom'; // Updated import
-import Home from './loginscreen/Home';
-import App from './App';
+import { useNavigate } from 'react-router-dom';
 
-const Login = () => {
+const Login = ({ handleLogin }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-  const navigate = useNavigate(); // Use useNavigate instead of useHistory
+  const navigate = useNavigate();
 
-  const handleLogin = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
@@ -23,10 +21,13 @@ const Login = () => {
       );
 
       if (user) {
-        // Redirect to Home page on successful login
-        //navigate('./Home'); // Use navigate to redirect
-        <App/>
-
+        if (user.username === 'Swapnil Roop Rai') {
+          handleLogin('user'); // Regular user
+          navigate('/loginscreen/Home');
+        } else if (user.username === 'Batman') {
+          handleLogin('admin'); // Admin user
+          navigate('/users/admin/admin');
+        }
       } else {
         setError('Invalid username or password');
       }
@@ -39,7 +40,7 @@ const Login = () => {
   return (
     <div>
       <h2>Login</h2>
-      <form onSubmit={handleLogin}>
+      <form onSubmit={handleSubmit}>
         <div>
           <label>Username:</label>
           <input
