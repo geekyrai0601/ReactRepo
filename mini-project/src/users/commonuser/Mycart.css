@@ -1,0 +1,49 @@
+/* Cart.css */
+.cart-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.cart-item-card {
+  background-color: #f8f8f8;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 15px;
+  margin: 10px 0;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: box-shadow 0.3s;
+}
+
+.cart-item-card:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.cart-item-card h3 {
+  margin: 0;
+  font-size: 1.5em;
+}
+
+.cart-item-card p {
+  margin: 5px 0;
+}
+
+.cart-item-card button {
+  background-color: #d9534f; /* Bootstrap danger color */
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 15px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.cart-item-card button:hover {
+  background-color: #c9302c; /* Darker shade on hover */
+}
+
+.cart-empty {
+  text-align: center;
+  font-size: 1.2em;
+  color: #999;
+}

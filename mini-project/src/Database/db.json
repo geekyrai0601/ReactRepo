@@ -1,0 +1,65 @@
+{
+  "products": [
+    {
+      "id": 1,
+      "name": "Comfortable Chair",
+      "description": "A stylish and comfortable chair for your living room.",
+      "price": 80,
+      "image": "chair.jpg",
+      "category": "Furniture"
+    },
+    {
+      "id": 2,
+      "name": "Elegant Table",
+      "description": "A spacious table perfect for dining or work.",
+      "price": 150,
+      "image": "table.jpg",
+      "category": "Furniture"
+    },
+    {
+      "id": 3,
+      "name": "Modern Lamp",
+      "description": "A sleek lamp to brighten up your space.",
+      "price": 50,
+      "image": "lamp.jpg",
+      "category": "Electic"
+    },
+    {
+      "id": 4,
+      "name": "Bulb",
+      "description": "A Bulb to brighten up your space.",
+      "price": 150,
+      "image": "bulb.jpg",
+      "category": "Electic"
+    },
+    {
+      "id": 5,
+      "name": "Screw driver",
+      "description": "A hardware to help around your home",
+      "price": 100,
+      "image": "screw_driver.jpg",
+      "category": "hardware"
+    },
+    {
+      "id": 6,
+      "name": "Nut bolt",
+      "description": "A hardware to tighten up hardware pieces your home",
+      "price": 40,
+      "image": "nutbolt.jpg",
+      "category": "hardware"
+    }
+  ],
+  "cart": [],
+  "users": [
+    {
+      "id": 1,
+      "username": "Batman",
+      "password": "admin123"
+    },
+    {
+      "id": 2,
+      "username": "Swapnil Roop Rai",
+      "password": "swapnil0601"
+    }
+  ]
+}
