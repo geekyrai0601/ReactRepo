@@ -1,0 +1,32 @@
+{
+  "emp": [
+    {
+      "empno": 10,
+      "ename": "Swapnil",
+      "job": "Janitor",
+      "salary": "50000",
+      "deptno": "1"
+    },
+    {
+      "empno": 11,
+      "ename": "Preetish",
+      "job": "Cook",
+      "salary": "0000",
+      "deptno": "2"
+    },
+    {
+      "empno": 13,
+      "ename": "Kaju",
+      "job": "Singer",
+      "salary": "10000",
+      "deptno": "3"
+    },
+    {
+      "empno": "14",
+      "ename": "Anvi",
+      "salary": "40000",
+      "job": "Bodyguard",
+      "deptno": "4"
+    }
+  ]
+}
