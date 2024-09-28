@@ -1,14 +1,36 @@
 import React from "react";
-function About()
-{  
-    return <div style={{backgroundColor:'LightPink', padding: '10px'}}>
-        <h1>About</h1>  
-        <p>
-            This website has been created by combined efforts of Swapnil Roop Rai, Kashvi Bhatia and Shreya Lohani.
-        </p>
-    </div>
+
+function About() {
+    return (
+        <div style={styles.container}>
+            <h1 style={styles.title}>About Us</h1>
+            <p style={styles.description}>
+                This website has been created by the combined efforts of Swapnil Roop Rai, Kashvi Bhatia, and Shreya Lohani.
+            </p>
+        </div>
+    );
 }
-        
-  
+
+const styles = {
+    container: {
+        backgroundColor: 'lightblue',
+        padding: '20px',
+        borderRadius: '10px',
+        boxShadow: '0 4px 10px rgba(0, 0, 0, 0.1)',
+        maxWidth: '600px',
+        margin: '50px auto',
+        textAlign: 'center',
+    },
+    title: {
+        color: '#333',
+        fontSize: '2.5em',
+        marginBottom: '20px',
+    },
+    description: {
+        fontSize: '1.2em',
+        color: '#555',
+        lineHeight: '1.6',
+    },
+};
 
 export default About;

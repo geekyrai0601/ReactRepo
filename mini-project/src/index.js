@@ -1,4 +1,3 @@
-// src/index.js
 import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
 import reportWebVitals from './reportWebVitals';
@@ -22,14 +21,16 @@ const App = () => {
 
   return (
     <Router>
-      {isLoggedIn && userType === 'user' && ( // Show navbar only for regular users
-        <div style={{ textAlign: "center" }}>
-          <Link to="/loginscreen/Home">Home</Link> | 
-          <Link to="/loginscreen/About">About Us</Link> | 
-          <Link to="/loginscreen/Categorize">Category</Link> | 
-          <Link to="/loginscreen/Products">Products</Link> | 
-          <Link to="/users/commonuser/Cart">My Cart</Link>
-        </div>
+      {isLoggedIn && ( // Show navbar only for logged-in users
+        <nav style={styles.navbar}>
+          <div style={styles.navLinks}>
+            <Link style={styles.link} to="/loginscreen/Home">Home</Link>
+            <Link style={styles.link} to="/loginscreen/About">About Us</Link>
+            <Link style={styles.link} to="/loginscreen/Categorize">Category</Link>
+            <Link style={styles.link} to="/loginscreen/Products">Products</Link>
+            <Link style={styles.link} to="/users/commonuser/Cart">My Cart</Link>
+          </div>
+        </nav>
       )}
 
       <Routes>
@@ -43,6 +44,30 @@ const App = () => {
       </Routes>
     </Router>
   );
+};
+
+const styles = {
+  navbar: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#007bff',
+    padding: '10px 20px',
+    boxShadow: '0 2px 5px rgba(0, 0, 0, 0.1)',
+  },
+  navLinks: {
+    display: 'flex',
+    gap: '15px', // Space between links
+  },
+  link: {
+    color: '#fff',
+    textDecoration: 'none',
+    fontSize: '18px',
+    transition: 'color 0.3s',
+  },
+  linkHover: {
+    color: '#ffc107',
+  },
 };
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
