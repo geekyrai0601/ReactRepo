@@ -6,7 +6,7 @@ const ProductCard = ({ product, onAddToCart }) => {
       <img src={require(`../images/${product.image}`)} alt={product.name} style={styles.image} />
       <h3>{product.name}</h3>
       <p>{product.description}</p>
-      <p>Price: ${product.price}</p>
+      <p>Price: ₹{product.price}</p>
       <button onClick={onAddToCart}>Add to Cart</button>
     </div>
   );

@@ -1,14 +1,32 @@
-import React from "react";
-function Categorize()
-{  
-    {  
-        return <div style={{backgroundColor:'LightPink', padding: '10px'}}>
-            <h1>Categorize</h1>  
-            <p>This page provides details about our compnay. This page provides details about our compnay. This page provides details about our compnay. This page provides details about our compnay. </p>
-            <p>This page provides details about our compnay. This page provides details about our compnay. This page provides details about our compnay. This page provides details about our compnay. </p>
-        </div>
-    }
-        
-}  
+import React, { useEffect, useState } from 'react';
+import CategoryButtons from './CategoryButton';
+import ProductList from './ProductList';
 
-export default Categorize;
+const CategoriesPage = () => {
+  const [products, setProducts] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState(null);
+
+  useEffect(() => {
+    fetch('http://localhost:3500/products')
+      .then(response => response.json())
+      .then(data => setProducts(data));
+  }, []);
+
+  const categories = [...new Set(products.map(product => product.category))];
+
+  const handleCategoryClick = (category) => {
+    setSelectedCategory(category);
+  };
+
+  return (
+    <div>
+      <h1>Product Categories</h1>
+      <CategoryButtons categories={categories} onCategoryClick={handleCategoryClick} />
+      {selectedCategory && (
+        <ProductList products={products} category={selectedCategory} />
+      )}
+    </div>
+  );
+};
+
+export default CategoriesPage;
