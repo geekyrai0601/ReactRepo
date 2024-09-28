@@ -7,11 +7,10 @@ const Cart = () => {
   const [checkoutMessage, setCheckoutMessage] = useState('');
 
   useEffect(() => {
-    // Fetch cart items for the user
     const fetchCartItems = async () => {
       try {
         const response = await axios.get('http://localhost:3500/cart');
-        const userCartItems = response.data.filter(item => item.userid === 2); // Assuming user ID for "Swapnil Roop Rai" is 2
+        const userCartItems = response.data.filter(item => item.userid === 2);
         setCartItems(userCartItems);
       } catch (error) {
         console.error('Error fetching cart items:', error);
@@ -30,25 +29,44 @@ const Cart = () => {
         return;
       }
 
-      if (itemToRemove.quantity > 1) {
-        // Decrease quantity and update total amount
-        const updatedItem = {
-          ...itemToRemove,
-          quantity: itemToRemove.quantity - 1,
-          totalamount: (itemToRemove.quantity - 1) * itemToRemove.price,
-        };
-
-        await axios.put(`http://localhost:3500/cart/${itemToRemove.recordid}`, updatedItem);
-        
-        setCartItems(cartItems.map(item => 
-          item.productid === productid ? updatedItem : item
-        ));
-      } else {
-        await axios.delete(`http://localhost:3500/cart/${itemToRemove.recordid}`);
-        setCartItems(cartItems.filter(item => item.productid !== productid));
-      }
+      await axios.delete(`http://localhost:3500/cart/${itemToRemove.recordid}`);
+      setCartItems(cartItems.filter(item => item.productid !== productid));
     } catch (error) {
       console.error('Error removing item from cart:', error);
+    }
+  };
+
+  const addItem = async (productid) => {
+    try {
+      const itemToUpdate = cartItems.find(item => item.productid === productid);
+      
+      const updatedItem = {
+        ...itemToUpdate,
+        quantity: itemToUpdate.quantity + 1,
+        totalamount: (itemToUpdate.quantity + 1) * itemToUpdate.price,
+      };
+
+      await axios.put(`http://localhost:3500/cart/${itemToUpdate.recordid}`, updatedItem);
+      setCartItems(cartItems.map(item => item.productid === productid ? updatedItem : item));
+    } catch (error) {
+      console.error('Error adding item to cart:', error);
+    }
+  };
+
+  const reduceItem = async (productid) => {
+    const itemToUpdate = cartItems.find(item => item.productid === productid);
+    if (itemToUpdate && itemToUpdate.quantity > 1) {
+      const updatedItem = {
+        ...itemToUpdate,
+        quantity: itemToUpdate.quantity - 1,
+        totalamount: (itemToUpdate.quantity - 1) * itemToUpdate.price,
+      };
+
+      await axios.put(`http://localhost:3500/cart/${itemToUpdate.recordid}`, updatedItem);
+      setCartItems(cartItems.map(item => item.productid === productid ? updatedItem : item));
+    } else if (itemToUpdate) {
+      // If quantity is 1, prompt to remove
+      removeFromCart(productid);
     }
   };
 
@@ -65,7 +83,6 @@ const Cart = () => {
     }
   };
 
-  // Calculate total price
   const totalPrice = cartItems.reduce((total, item) => total + item.totalamount, 0);
 
   return (
@@ -81,10 +98,12 @@ const Cart = () => {
               <h3>{item.productname}</h3>
               <p>Price: ₹{item.price}</p>
               <p>Quantity: {item.quantity}</p>
-              <button onClick={() => removeFromCart(item.productid)}>Remove from Cart</button>
+              <button onClick={() => addItem(item.productid)} style={{ margin: '5px' }}>Add more item</button>
+              <button onClick={() => reduceItem(item.productid)} style={{ margin: '5px' }}>Reduce item</button>
+              <button onClick={() => removeFromCart(item.productid)} style={{ margin: '5px' }}>Remove from Cart</button>
             </div>
           ))}
-          <h3>Total Price: ₹{totalPrice}</h3> {/* Display total price */}
+          <h3>Total Price: ₹{totalPrice}</h3>
           <button onClick={handleCheckout}>Checkout</button>
         </>
       )}

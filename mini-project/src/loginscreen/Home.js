@@ -1,7 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
+import ikeaImage from '../images/ikea.jpg'; // Import the banner image
 
 const Home = () => {
   const [products, setProducts] = useState([]);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const intervalRef = useRef(null);
 
   useEffect(() => {
     fetch('http://localhost:3500/products') // Adjust the URL as needed
@@ -11,7 +14,31 @@ const Home = () => {
         const lastFiveProducts = data.slice(-5);
         setProducts(lastFiveProducts);
       });
+
+    return () => {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+      }
+    };
   }, []);
+
+  useEffect(() => {
+    intervalRef.current = setInterval(() => {
+      setCurrentIndex(prevIndex => (prevIndex + 1) % products.length);
+    }, 5000);
+
+    return () => {
+      clearInterval(intervalRef.current);
+    };
+  }, [products]);
+
+  const goToNext = () => {
+    setCurrentIndex((currentIndex + 1) % products.length);
+  };
+
+  const goToPrev = () => {
+    setCurrentIndex((currentIndex - 1 + products.length) % products.length);
+  };
 
   const containerStyle = {
     textAlign: 'center',
@@ -32,46 +59,53 @@ const Home = () => {
     color: '#555',
   };
 
-  const cardStyle = {
-    border: '1px solid #eee',
-    borderRadius: '5px',
-    padding: '15px',
-    margin: '10px',
-    width: '200px',
-    textAlign: 'center',
-    boxShadow: '0 2px 5px rgba(0,0,0,0.1)',
-    transition: 'transform 0.2s',
-  };
-
   const imgStyle = {
-    width: '200px',
-    height: '200px',
+    width: '300px',
+    height: '300px',
     borderRadius: '5px',
     objectFit: 'cover',
   };
 
-  const cardHoverStyle = {
-    transform: 'scale(1.05)',
+  const bannerStyle = {
+    width: '100%',
+    height: '600px',
+    marginBottom: '20px', // Space between banner and content
+  };
+
+  const slideshowStyle = {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    position: 'relative',
+  };
+
+  const buttonStyle = {
+    backgroundColor: '#fff',
+    border: '1px solid #ccc',
+    borderRadius: '5px',
+    padding: '10px',
+    cursor: 'pointer',
+    position: 'absolute',
+    top: '50%',
+    transform: 'translateY(-50%)',
   };
 
   return (
     <div style={containerStyle}>
+      <img src={ikeaImage} alt="IKEA Banner" style={bannerStyle} /> {/* Banner image */}
       <h1 style={headerStyle}>Welcome to IKEA Store</h1>
       <h2 style={subHeaderStyle}>Featured Products</h2>
-      <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center' }}>
-        {products.map(product => (
-          <div
-            style={cardStyle}
-            key={product.id}
-            onMouseOver={(e) => e.currentTarget.style.transform = cardHoverStyle.transform}
-            onMouseOut={(e) => e.currentTarget.style.transform = 'none'}
-          >
-            <img src={require(`../images/${product.image}`)} alt={product.name} style={imgStyle} />
-            <h4>{product.name}</h4>
-            <p>{product.description}</p>
-            <p>${product.price}</p>
+      <div style={slideshowStyle}>
+        <button onClick={goToPrev} style={{ ...buttonStyle, left: '10px' }}>Prev</button>
+        
+        {products.length > 0 && (
+          <div>
+            <img src={require(`../images/${products[currentIndex].image}`)} alt={products[currentIndex].name} style={imgStyle} />
+            <h4>{products[currentIndex].name}</h4>
           </div>
-        ))}
+        )}
+
+        <button onClick={goToNext} style={{ ...buttonStyle, right: '10px' }}>Next</button>
       </div>
     </div>
   );

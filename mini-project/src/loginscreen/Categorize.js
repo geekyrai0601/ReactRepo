@@ -4,23 +4,13 @@ import ProductList from './ProductList';
 
 const CategoriesPage = () => {
   const [products, setProducts] = useState([]);
-  const [selectedCategory, setSelectedCategory] = useState(null);
+  const [selectedCategory, setSelectedCategory] = useState('Furniture'); // Default to Furniture
   const [cartItems, setCartItems] = useState([]);
 
   useEffect(() => {
     fetch('http://localhost:3500/products')
       .then(response => response.json())
       .then(data => setProducts(data));
-  }, []);
-
-  useEffect(() => {
-    const fetchCartItems = async () => {
-      const cartResponse = await fetch('http://localhost:3500/cart');
-      const cartData = await cartResponse.json();
-      setCartItems(cartData);
-    };
-    
-    fetchCartItems();
   }, []);
 
   const categories = [...new Set(products.map(product => product.category))];
@@ -33,6 +23,7 @@ const CategoriesPage = () => {
     const existingCartItem = cartItems.find(item => item.productid === product.id);
 
     if (existingCartItem) {
+      // If the product already exists in the cart, update the quantity
       const updatedCartItem = {
         ...existingCartItem,
         quantity: existingCartItem.quantity + 1,
@@ -60,6 +51,7 @@ const CategoriesPage = () => {
         console.error("Error updating cart:", error);
       }
     } else {
+      // If the product doesn't exist in the cart, add it as a new item
       const recordIds = cartItems.map(item => item.recordid);
       const nextRecordId = recordIds.length > 0 ? Math.max(...recordIds) + 1 : 1;
 
@@ -95,15 +87,22 @@ const CategoriesPage = () => {
     }
   };
 
+  // Filtered products for the selected category
+  const filteredProducts = products.filter(product => product.category === selectedCategory);
+  // Filtered products for the furniture category
+  const furnitureProducts = products.filter(product => product.category === 'Furniture');
+
   return (
     <div>
       <h1>Product Categories</h1>
       <CategoryButtons categories={categories} onCategoryClick={handleCategoryClick} />
-      {selectedCategory && (
-        <ProductList 
-          products={products.filter(product => product.category === selectedCategory)} 
-          onAddToCart={handleAddToCart} 
-        />
+      {/* Render selected category products */}
+      {selectedCategory === 'Furniture' && filteredProducts.length > 0 && (
+        <ProductList products={filteredProducts} onAddToCart={handleAddToCart} />
+      )}
+      {/* Render products for Hardware and Electric categories only */}
+      {selectedCategory !== 'Furniture' && filteredProducts.length > 0 && (
+        <ProductList products={filteredProducts} onAddToCart={handleAddToCart} />
       )}
     </div>
   );
