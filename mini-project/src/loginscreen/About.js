@@ -5,7 +5,7 @@ function About() {
         <div style={styles.container}>
             <h1 style={styles.title}>About Us</h1>
             <p style={styles.description}>
-                This website has been created by the combined efforts of Swapnil Roop Rai, Kashvi Bhatia, and Shreya Lohani.
+                About Page 
             </p>
         </div>
     );

@@ -23,7 +23,6 @@ const Cart = () => {
 
   const removeFromCart = async (productid) => {
     try {
-      // Find the cart item that matches the productid
       const itemToRemove = cartItems.find(item => item.productid === productid);
       
       if (!itemToRemove) {
@@ -39,16 +38,13 @@ const Cart = () => {
           totalamount: (itemToRemove.quantity - 1) * itemToRemove.price,
         };
 
-        // Update the item in the backend
-        await axios.put(`http://localhost:3500/cart/${itemToRemove.id}`, updatedItem);
+        await axios.put(`http://localhost:3500/cart/${itemToRemove.recordid}`, updatedItem);
         
-        // Update local state to reflect the change
         setCartItems(cartItems.map(item => 
           item.productid === productid ? updatedItem : item
         ));
       } else {
-        // If quantity is 1, remove the item completely
-        await axios.delete(`http://localhost:3500/cart/${itemToRemove.id}`);
+        await axios.delete(`http://localhost:3500/cart/${itemToRemove.recordid}`);
         setCartItems(cartItems.filter(item => item.productid !== productid));
       }
     } catch (error) {
@@ -58,18 +54,19 @@ const Cart = () => {
 
   const handleCheckout = async () => {
     try {
-      // Empty the cart in the backend
       await Promise.all(cartItems.map(item => 
-        axios.delete(`http://localhost:3500/cart/${item.id}`)
+        axios.delete(`http://localhost:3500/cart/${item.recordid}`)
       ));
 
-      // Clear local cartItems state
       setCartItems([]);
       setCheckoutMessage('Thank you for your purchase!');
     } catch (error) {
       console.error('Error during checkout:', error);
     }
   };
+
+  // Calculate total price
+  const totalPrice = cartItems.reduce((total, item) => total + item.totalamount, 0);
 
   return (
     <div>
@@ -78,17 +75,18 @@ const Cart = () => {
       {cartItems.length === 0 ? (
         <p>Your cart is empty.</p>
       ) : (
-        cartItems.map(item => (
-          <div key={item.productid} className="cart-item-card">
-            <h3>{item.productname}</h3>
-            <p>Price: ₹{item.price}</p>
-            <p>Quantity: {item.quantity}</p>
-            <button onClick={() => removeFromCart(item.productid)}>Remove from Cart</button>
-          </div>
-        ))
-      )}
-      {cartItems.length > 0 && (
-        <button onClick={handleCheckout}>Checkout</button>
+        <>
+          {cartItems.map(item => (
+            <div key={item.productid} className="cart-item-card">
+              <h3>{item.productname}</h3>
+              <p>Price: ₹{item.price}</p>
+              <p>Quantity: {item.quantity}</p>
+              <button onClick={() => removeFromCart(item.productid)}>Remove from Cart</button>
+            </div>
+          ))}
+          <h3>Total Price: ₹{totalPrice}</h3> {/* Display total price */}
+          <button onClick={handleCheckout}>Checkout</button>
+        </>
       )}
     </div>
   );

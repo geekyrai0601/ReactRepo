@@ -1,3 +1,4 @@
+// src/index.js
 import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
 import reportWebVitals from './reportWebVitals';
@@ -8,7 +9,8 @@ import About from './loginscreen/About';
 import CategoriesPage from './loginscreen/Categorize';
 import Products from './loginscreen/Products';
 import Cart from './users/commonuser/Cart';
-import Admin from './users/admin/admin'; // Admin component
+import Admin from './users/admin/admin';
+import ProtectedRoute from './ProtectedRoute';
 
 const App = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -19,9 +21,13 @@ const App = () => {
     setUserType(type);
   };
 
+  const AdminRoute = ({ children }) => {
+    return userType === 'admin' ? children : <Navigate to="/" />;
+  };
+
   return (
     <Router>
-      {isLoggedIn && ( // Show navbar only for logged-in users
+      {isLoggedIn && ( 
         <nav style={styles.navbar}>
           <div style={styles.navLinks}>
             <Link style={styles.link} to="/loginscreen/Home">Home</Link>
@@ -35,12 +41,54 @@ const App = () => {
 
       <Routes>
         <Route path="/" element={<Login handleLogin={handleLogin} />} />
-        <Route path="/loginscreen/Home" element={isLoggedIn ? <Home /> : <Navigate to="/" />} />
-        <Route path="/loginscreen/About" element={isLoggedIn ? <About /> : <Navigate to="/" />} />
-        <Route path="/loginscreen/Categorize" element={isLoggedIn ? <CategoriesPage /> : <Navigate to="/" />} />
-        <Route path="/loginscreen/Products" element={isLoggedIn ? <Products /> : <Navigate to="/" />} />
-        <Route path="/users/commonuser/Cart" element={isLoggedIn ? <Cart /> : <Navigate to="/" />} />
-        <Route path="/users/admin/admin" element={userType === 'admin' ? <Admin /> : <Navigate to="/" />} />
+        <Route 
+          path="/loginscreen/Home" 
+          element={
+            <ProtectedRoute isLoggedIn={isLoggedIn}>
+              <Home />
+            </ProtectedRoute>
+          } 
+        />
+        <Route 
+          path="/loginscreen/About" 
+          element={
+            <ProtectedRoute isLoggedIn={isLoggedIn}>
+              <About />
+            </ProtectedRoute>
+          } 
+        />
+        <Route 
+          path="/loginscreen/Categorize" 
+          element={
+            <ProtectedRoute isLoggedIn={isLoggedIn}>
+              <CategoriesPage />
+            </ProtectedRoute>
+          } 
+        />
+        <Route 
+          path="/loginscreen/Products" 
+          element={
+            <ProtectedRoute isLoggedIn={isLoggedIn}>
+              <Products />
+            </ProtectedRoute>
+          } 
+        />
+        <Route 
+          path="/users/commonuser/Cart" 
+          element={
+            <ProtectedRoute isLoggedIn={isLoggedIn}>
+              <Cart />
+            </ProtectedRoute>
+          } 
+        />
+        <Route 
+          path="/users/admin/admin" 
+          element={
+            <AdminRoute>
+              <Admin />
+            </AdminRoute>
+          } 
+        />
       </Routes>
     </Router>
   );
@@ -64,9 +112,6 @@ const styles = {
     textDecoration: 'none',
     fontSize: '18px',
     transition: 'color 0.3s',
-  },
-  linkHover: {
-    color: '#ffc107',
   },
 };
 

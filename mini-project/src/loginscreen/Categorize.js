@@ -13,6 +13,16 @@ const CategoriesPage = () => {
       .then(data => setProducts(data));
   }, []);
 
+  useEffect(() => {
+    const fetchCartItems = async () => {
+      const cartResponse = await fetch('http://localhost:3500/cart');
+      const cartData = await cartResponse.json();
+      setCartItems(cartData);
+    };
+    
+    fetchCartItems();
+  }, []);
+
   const categories = [...new Set(products.map(product => product.category))];
 
   const handleCategoryClick = (category) => {
@@ -23,7 +33,6 @@ const CategoriesPage = () => {
     const existingCartItem = cartItems.find(item => item.productid === product.id);
 
     if (existingCartItem) {
-      // If the product already exists in the cart, update the quantity
       const updatedCartItem = {
         ...existingCartItem,
         quantity: existingCartItem.quantity + 1,
@@ -51,7 +60,6 @@ const CategoriesPage = () => {
         console.error("Error updating cart:", error);
       }
     } else {
-      // If the product doesn't exist in the cart, add it as a new item
       const recordIds = cartItems.map(item => item.recordid);
       const nextRecordId = recordIds.length > 0 ? Math.max(...recordIds) + 1 : 1;
 
