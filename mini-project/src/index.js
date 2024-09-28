@@ -1,4 +1,3 @@
-// src/index.js
 import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
 import reportWebVitals from './reportWebVitals';
@@ -27,7 +26,7 @@ const App = () => {
 
   return (
     <Router>
-      {isLoggedIn && ( 
+      {isLoggedIn && userType !== 'admin' && ( // Show navbar only if not admin
         <nav style={styles.navbar}>
           <div style={styles.navLinks}>
             <Link style={styles.link} to="/loginscreen/Home">Home</Link>

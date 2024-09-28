@@ -7,6 +7,8 @@ function Ajax() {
     const [name, setName] = useState("");
     const [price, setPrice] = useState("");
     const [category, setCategory] = useState("");
+    const [description, setDescription] = useState(""); // New state for description
+    const [image, setImage] = useState(""); // New state for image
     const [productArray, setProductArray] = useState([]);
     const [loading, setLoading] = useState(false); // Loading state
 
@@ -28,12 +30,12 @@ function Ajax() {
     }
 
     function addProductClick() {
-        if (!name || !price || !category) {
+        if (!name || !price || !category || !description || !image) {
             alert("Please fill in all fields.");
             return;
         }
 
-        let productObj = { id, name, price, category };
+        let productObj = { id, name, price, category, description, image }; // Include new fields
 
         dataServiceObj.addProduct(productObj).then(() => {
             alert("New Product Added to server");
@@ -62,18 +64,20 @@ function Ajax() {
             setName(productObj.name);
             setPrice(productObj.price);
             setCategory(productObj.category);
+            setDescription(productObj.description); // Set the description
+            setImage(productObj.image); // Set the image
         }).catch(error => {
             console.error("Error selecting product:", error);
         });
     }
 
     function updateProductClick() {
-        if (!name || !price || !category) {
+        if (!name || !price || !category || !description || !image) {
             alert("Please fill in all fields.");
             return;
         }
 
-        let productObj = { id, name, price, category };
+        let productObj = { id, name, price, category, description, image }; // Include new fields
 
         dataServiceObj.updateProduct(productObj).then(() => {
             alert("Product details are updated on server");
@@ -89,6 +93,8 @@ function Ajax() {
         setName("");
         setPrice("");
         setCategory("");
+        setDescription(""); // Clear the description
+        setImage(""); // Clear the image
     }
 
     const result = productArray.map((item, index) => (
@@ -97,13 +103,20 @@ function Ajax() {
             <td className="td">{item.name}</td>
             <td className="td">{item.price}</td>
             <td className="td">{item.category}</td>
+            <td className="td">{item.description}</td> {/* Display description */}
+            <td className="td">
+                <img 
+                    src={require(`../../images/${item.image}`)} // Updated path for images
+                    alt={item.name} 
+                    style={{ width: '50px', height: '50px' }} 
+                /> 
+            </td>
             <td className="td" align='center'>
-    <div className="button-group">
-        <button className="link" onClick={() => selectProductClick(item.id)}>Select</button>
-        <button className="link" onClick={() => deleteProductClick(item.id)}>Delete</button>
-    </div>
-</td>
-
+                <div className="button-group">
+                    <button className="link" onClick={() => selectProductClick(item.id)}>Select</button>
+                    <button className="link" onClick={() => deleteProductClick(item.id)}>Delete</button>
+                </div>
+            </td>
         </tr>
     ));
 
@@ -119,6 +132,10 @@ function Ajax() {
                     value={price} onChange={(e) => setPrice(e.target.value)} />
                 <input className="input" placeholder="Category" type="text"
                     value={category} onChange={(e) => setCategory(e.target.value)} />
+                <input className="input" placeholder="Description" type="text" // New input for description
+                    value={description} onChange={(e) => setDescription(e.target.value)} />
+                <input className="input" placeholder="Image URL" type="text" // New input for image
+                    value={image} onChange={(e) => setImage(e.target.value)} />
             </div>
             <hr />
             <div className="button-group">
@@ -136,11 +153,13 @@ function Ajax() {
                             <th className="th">Product Name</th>
                             <th className="th">Product Price</th>
                             <th className="th">Product Category</th>
+                            <th className="th">Product Description</th> {/* New header for description */}
+                            <th className="th">Product Image</th> {/* New header for image */}
                             <th className="th">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {result.length > 0 ? result : <tr><td colSpan="5">No products found.</td></tr>}
+                        {result.length > 0 ? result : <tr><td colSpan="7">No products found.</td></tr>}
                     </tbody>
                 </table>
             )}
