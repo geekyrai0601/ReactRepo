@@ -35,8 +35,9 @@
     {
       "id": 5,
       "name": "Screw driver",
-      "description": "A hardware to help around your home",
-      "price": 100,
+      "description": "A hardware to tighten up hardware pieces your home",
+
+      "price": "100",
       "image": "screw_driver.jpg",
       "category": "hardware"
     },
